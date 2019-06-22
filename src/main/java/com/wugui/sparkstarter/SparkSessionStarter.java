@@ -15,12 +15,19 @@ import java.util.List;
 
 /**
  *
- * @program: spark-starter
- * @author: huzekang
- * @create: 2019-06-20 21:46
- **/
-public class SparkSqlJava {
+ * 使用Spark2.0的SparkSession进行统一api操作
+ * Spark2.0中只有一个入口点(spark会话),从中你可以获得各种其他入口点(spark上下文,流上下文等)
+ *
+ * @author huzekang*/
+public class SparkSessionStarter {
     public static void main(String[] args) {
+//        在Spark的早期版本，sparkContext是进入Spark的切入点。我们都知道RDD是Spark中重要的API，然而它的创建和操作得使用sparkContext提供的API；
+//        对于RDD之外的其他东西，我们需要使用其他的Context。
+//        比如对于流处理来说，我们得使用StreamingContext；对于SQL得使用sqlContext；而对于hive得使用HiveContext。
+//        然而DataSet和Dataframe提供的API逐渐称为新的标准API，我们需要一个切入点来构建它们，所以在 Spark 2.0中我们引入了一个新的切入点(entry point)：SparkSession。
+//        SparkConf、SparkContext和SQLContext都已经被封装在SparkSession当中.
+//　　     SparkSession实质上是SQLContext和HiveContext的组合（未来可能还会加上StreamingContext），所以在SQLContext和HiveContext上可用的API在SparkSession上同样是可以使用的。
+//        SparkSession内部封装了sparkContext，所以计算实际上是由sparkContext完成的。
         SparkSession spark = SparkSession
                 .builder()
                 .master("local")
@@ -28,11 +35,11 @@ public class SparkSqlJava {
                 .config("spark.some.config.option", "some-value")
                 .getOrCreate();
 
-//        quickStart(spark);
+        quickStart(spark);
 
-//        code(spark);
+        customCode(spark);
 
-        reflection(spark);
+        reflectionCode(spark);
 
     }
 
@@ -48,10 +55,10 @@ public class SparkSqlJava {
     /**
      *
      * 文件 => JavaRDD => DataFrame
-     * 使用反射机制推断RDD的数据结构 :
+     * 使用反射机制推断RDD的数据结构（不推荐） :
      *   当spark应用可以推断RDD数据结构时，可使用这种方式。这种基于反射的方法可以使代码更简洁有效。
      */
-    public static void reflection(SparkSession spark) {
+    public static void reflectionCode(SparkSession spark) {
         // Create an RDD of Person objects from a text file
         JavaRDD<Person> peopleRDD = spark.read()
                 .textFile("/Users/huzekang/study/spark-starter/src/main/resources/people.txt")
@@ -109,9 +116,9 @@ public class SparkSqlJava {
 
     /**
      * 通过编程接口构造一个数据结构，然后映射到RDD上
-     *   当spark应用无法推断RDD数据结构时，可使用这种方式。
+     *   当spark应用无法推断RDD数据结构时，可使用这种方式。（推荐）
      */
-    public static void code(SparkSession spark) {
+    public static void customCode(SparkSession spark) {
         // Create an RDD
         JavaRDD<String> peopleRDD = spark.sparkContext()
                 .textFile("/Users/huzekang/study/spark-starter/src/main/resources/people.txt", 1)
@@ -173,4 +180,6 @@ public class SparkSqlJava {
         private Integer age;
 
     }
+
+
 }

@@ -12,16 +12,12 @@ public class SparkMapJava {
     public static void main(String[] args){
         SparkConf conf = new SparkConf().setMaster("local").setAppName("SparkFlatMapJava");
         JavaSparkContext sc = new JavaSparkContext(conf);
-        // 减少日志输出
-        sc.setLogLevel("ERROR");
 
         // java实现
         mapJava(sc);
 
         //java8实现
         mapJava8(sc);
-
-
     }
 
     public static void mapJava(JavaSparkContext sc){

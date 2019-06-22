@@ -14,8 +14,8 @@ public class SparkFlatMapJava {
     public static void main(String[] args){
         SparkConf conf = new SparkConf().setMaster("local").setAppName("SparkFlatMapJava");
         JavaSparkContext sc = new JavaSparkContext(conf);
-        // 减少日志输出
-        sc.setLogLevel("ERROR");
+
+
 
         //java实现
         flatMapJava(sc);

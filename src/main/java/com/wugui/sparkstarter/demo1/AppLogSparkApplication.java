@@ -18,7 +18,7 @@ public class AppLogSparkApplication {
         //1.创建spark配置文件和上下文对象
         SparkConf conf = new SparkConf().setAppName("sparkTest").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
-        sc.setLogLevel("ERROR");
+
 
         //2.读取日志文件并创建一个RDD，使用SparkContext的textFile（）方法
         JavaRDD<String> javaRDD = sc.textFile("./app_log.txt");
