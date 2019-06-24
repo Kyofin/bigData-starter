@@ -34,6 +34,19 @@ key-valuelist
  * 使用hive元数据
  *      SparkSession spark = SparkSession.builder().enableHiveSupport().getOrCreate()
 
+查询远程的hive
+1. 项目中resource目录加入文件hive-site.xml，指明hive的thrift连接
+```
+<configuration>
+   <property>
+        <name>hive.metastore.uris</name>
+        <value>thrift://cdh01:9083</value>
+   </property>
+</configuration>
+
+2. 直接在代码中进行普通的spark sql查询即可
+![](https://raw.githubusercontent.com/huzekang/picbed/master/20190624170353.png)
+```
 ### 基本操作
 
 ```
