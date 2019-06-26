@@ -15,9 +15,10 @@ public class SparkHiveNewVersion {
         //  定义上下文
         SparkSession spark = SparkSession
                 .builder()
-                //  如果需要提交到remote spark则使用spark://host:port
+                //  如果需要作业要以jar包形式提交到remote spark，则使用spark://host:port
 //                .master("spark://10.0.0.50:7077")
-                //  如果需要提交到remote spark则使用local
+                //  如果idea中测试则使用local。
+                //  如果作业要以jar包形式提交到yarn则不设置master。
                 .master("local")
                 .appName("Java Spark SQL Starter ！！")
                 .enableHiveSupport()
