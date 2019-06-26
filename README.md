@@ -45,9 +45,10 @@ key-valuelist
    </property>
 </configuration>
 
+```
 2. 直接在代码中进行普通的spark sql查询即可
 ![](https://raw.githubusercontent.com/huzekang/picbed/master/20190624170353.png)
-```
+
 ### 基本操作
 
 ```
