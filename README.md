@@ -129,19 +129,26 @@ sales.groupBy("year").pivot("city",Seq("Warsaw","Boston","Toronto")).agg(sum("am
 
 ### 提交作业到本机的spark环境
 
-1. 启动spark
+1.启动spark
 ```
-~/opt/spark-2.4.0-bin-hadoop2.7 » sbin/start-all.sh  
+~/opt/spark-2.4.0-bin-hadoop2.7 » bin/spark-submit --class "com.wugui.sparkstarter.SparkHiveNewVersion" /Users/huzekang/study/spark-starter/target/spark-starter-1.0-SNAPSHOT.jar
 ```
 可以观察到起来了一个master和worker进程。
 ![](https://raw.githubusercontent.com/huzekang/picbed/master/20190626112610.png)
 
-2. 使用`mvn clean package`打包好的作业，并提交到本地安装好的spark上跑
+2.代码中定义的上下文要指定master为spark server的地址。
+```java
+SparkSession spark = SparkSession
+                .builder()
+                .master("spark://10.0.0.50:7077")
+```
+
+3.使用`mvn clean package`打包好的作业，并提交到本地安装好的spark环境上跑
 ```
 ~/opt/spark-2.4.0-bin-hadoop2.7 » bin/spark-submit --class "com.wugui.sparkstarter.SimpleApp" /Users/huzekang/study/spark-starter/target/spark-starter-1.0-SNAPSHOT.jar
 
 ```
-3. 打开spark server界面，可以看到已经完成的spark作业。
+4.打开spark server界面，可以看到已经完成的spark作业。
 ![](https://raw.githubusercontent.com/huzekang/picbed/master/20190626112849.png)
 
 ### 提交作业到yarn
