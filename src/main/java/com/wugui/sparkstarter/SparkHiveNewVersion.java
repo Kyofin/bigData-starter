@@ -15,8 +15,11 @@ public class SparkHiveNewVersion {
         //  定义上下文
         SparkSession spark = SparkSession
                 .builder()
+                //  如果需要提交到remote spark则使用spark://host:port
+//                .master("spark://10.0.0.50:7077")
+                //  如果需要提交到remote spark则使用local
                 .master("local")
-                .appName("Java Spark SQL basic example")
+                .appName("Java Spark SQL Starter ！！")
                 .enableHiveSupport()
                 .config("spark.some.config.option", "some-value")
                 .getOrCreate();
@@ -48,7 +51,6 @@ public class SparkHiveNewVersion {
                 + "ON si.name=ss.name "
                 + "WHERE ss.score>=80");
 
-        spark.sql("DROP TABLE IF EXISTS good_student_infos");
         // 根据DataFrame创建临时表
         goodStudentsDF.registerTempTable("goodstudent_temp");
         Dataset result = spark.sql("select * from goodstudent_temp");
@@ -57,9 +59,10 @@ public class SparkHiveNewVersion {
         /**
          * 将临时视图保存到hive表 good_student_infos
          */
-        goodStudentsDF.write().mode(SaveMode.Overwrite).saveAsTable("good_student_infos2");
+        spark.sql("DROP TABLE IF EXISTS good_student_infos");
+        goodStudentsDF.write().mode(SaveMode.Overwrite).saveAsTable("good_student_infos");
 
-        spark.table("good_student_infos2").foreach(row -> {
+        spark.table("good_student_infos").foreach(row -> {
             //  两种方式获取每行的数据
             System.out.println(row.get(2));
             System.out.println(row.getInt(row.fieldIndex("score")));

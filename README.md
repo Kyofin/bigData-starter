@@ -87,9 +87,10 @@ sales.groupBy("year").pivot("city",Seq("Warsaw","Boston","Toronto")).agg(sum("am
 ## 本地测试和提交作业
 参考：https://blog.csdn.net/dream_an/article/details/54915894
 
-- idea上测试spark作业
+### idea上测试spark作业
 
-引入依赖
+1. 引入依赖
+
 ```
        <!-- Spark dependency -->
        <dependency> 
@@ -118,13 +119,29 @@ sales.groupBy("year").pivot("city",Seq("Warsaw","Boston","Toronto")).agg(sum("am
        </dependency>
 ```
 
-- 提交作业到本机的spark环境
+2. 直接在idea上运行相应的main方法。并在spark上下文设置master为local即可。
 
-将使用`mvn clean package`打包好的作业提交到本地安装好的spark上跑
+```
+  SparkConf conf = new SparkConf().setMaster("local").setAppName("SparkFlatMapJava");
+```
+
+
+
+### 提交作业到本机的spark环境
+
+1. 启动spark
+```
+~/opt/spark-2.4.0-bin-hadoop2.7 » sbin/start-all.sh  
+```
+可以观察到起来了一个master和worker进程。
+![](https://raw.githubusercontent.com/huzekang/picbed/master/20190626112610.png)
+
+2. 使用`mvn clean package`打包好的作业，并提交到本地安装好的spark上跑
 ```
 ~/opt/spark-2.4.0-bin-hadoop2.7 » bin/spark-submit --class "com.wugui.sparkstarter.SimpleApp" /Users/huzekang/study/spark-starter/target/spark-starter-1.0-SNAPSHOT.jar
 
 ```
-![](https://raw.githubusercontent.com/huzekang/picbed/master/20190620155332.png)
+3. 打开spark server界面，可以看到已经完成的spark作业。
+![](https://raw.githubusercontent.com/huzekang/picbed/master/20190626112849.png)
 
-- 提交作业到yarn
+### 提交作业到yarn
