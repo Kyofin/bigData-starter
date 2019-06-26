@@ -161,10 +161,15 @@ SparkSession spark = SparkSession
                 .config("spark.some.config.option", "some-value")
                 .getOrCreate();
 ```
+2.shell中声明`YARN_CONF_DIR`和`HADOOP_CONF_DIR`
+```
+export YARN_CONF_DIR=/Users/huzekang/opt/hadoop-cdh/hadoop-2.6.0-cdh5.14.2/etc/hadoop 
+export  HADOOP_CONF_DIR=/Users/huzekang/opt/hadoop-cdh/hadoop-2.6.0-cdh5.14.2/etc/hadoop 
+```
 
-2.使用`mvn clean package`打包好的作业，并提交到本地安装好的spark环境上跑
+3.使用`mvn clean package`打包好的作业，并提交到本地安装好的yarn环境上跑。
 ```
 ~/opt/spark-2.4.0-bin-hadoop2.7 » bin/spark-submit  --master yarn  --deploy-mode cluster  --class "com.wugui.sparkstarter.SparkHiveNewVersion" /Users/huzekang/study/spark-starter/target/spark-starter-1.0-SNAPSHOT.jar
 ```
-3.打开yarn观察到作业已经完成了。
+4.打开yarn观察到作业已经完成了。
 ![](https://raw.githubusercontent.com/huzekang/picbed/master/20190626133707.png)
