@@ -6,8 +6,10 @@ import org.apache.spark.api.java.JavaSparkContext;
 
 /**
  * 两个简单使用的例子
- * 1. 读取文件打印每行
- * 2. wordcount
+ * 1. 读取文件打印每行 （读取hdfs文件）
+ *          => 地址要和hdfs目录下的core-site.xml一样。
+ *          => 参考：![](https://raw.githubusercontent.com/huzekang/picbed/master/20190625000822.png)
+ * 2. wordcount（读取本地文件）
  **/
 public class SparkStarter {
 
@@ -17,7 +19,8 @@ public class SparkStarter {
                 .setAppName("SparkStarter");
         //之后你用的是Rdd
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
-        JavaRDD<String> stringJavaRDD = sc.textFile("/Users/huzekang/study/spark-starter/src/main/resources/students.txt");
+        // Should be some file on remote hdfs
+        JavaRDD<String> stringJavaRDD = sc.textFile("hdfs://cdh01:8020/tmp/spark_starter/app_log.txt");
         stringJavaRDD.foreach(o -> System.out.println(o));
 
         // Should be some file on your system

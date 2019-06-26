@@ -30,11 +30,12 @@ key-valuelist
 可以参考：https://zhuanlan.zhihu.com/p/45729547
 
  * 不使用hive元数据：
- *      SparkSession spark = SparkSession.builder().getOrCreate()
+    *      SparkSession spark = SparkSession.builder().getOrCreate()
  * 使用hive元数据
- *      SparkSession spark = SparkSession.builder().enableHiveSupport().getOrCreate()
+    * SparkSession spark = SparkSession.builder().enableHiveSupport().getOrCreate()
 
-查询远程的hive
+- 查询远程的hive:
+
 1. 项目中resource目录加入文件hive-site.xml，指明hive的thrift连接
 ```
 <configuration>
