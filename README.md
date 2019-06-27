@@ -145,7 +145,7 @@ SparkSession spark = SparkSession
 
 3.使用`mvn clean package`打包好的作业，并提交到本地安装好的spark环境上跑
 ```
-~/opt/spark-2.4.0-bin-hadoop2.7 » bin/spark-submit --class "com.wugui.sparkstarter.SimpleApp" /Users/huzekang/study/spark-starter/target/spark-starter-1.0-SNAPSHOT.jar
+~/opt/spark-2.4.0-bin-hadoop2.7 » bin/spark-submit --class "com.wugui.sparkstarter.SparkHiveNewVersion" /Users/huzekang/study/spark-starter/target/spark-starter-1.0-SNAPSHOT.jar
 
 ```
 4.打开spark server界面，可以看到已经完成的spark作业。

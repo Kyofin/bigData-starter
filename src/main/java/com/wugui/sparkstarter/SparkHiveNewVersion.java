@@ -15,14 +15,19 @@ public class SparkHiveNewVersion {
         //  定义上下文
         SparkSession spark = SparkSession
                 .builder()
-                //  如果需要作业要以jar包形式提交到remote spark，则使用spark://host:port
+                                //  如果需要作业要以jar包形式提交到remote spark，则使用spark://host:port
 //                .master("spark://10.0.0.50:7077")
-                //  如果idea中测试则使用local。
-                //  如果作业要以jar包形式提交到yarn则不设置master。
+
+                                //  如果idea中测试则使用local。
+                                //  如果作业要以jar包形式提交到yarn则不设置master。
                 .master("local")
+
                 .appName("Java Spark SQL Starter ！！")
                 .enableHiveSupport()
-                .config("spark.some.config.option", "some-value")
+                                // 改变spark sql写出时使用的压缩编码。
+                                // 默认是snappy，可能会在用hive客户端查询时出现错误：
+                                // Caused by: org.xerial.snappy.SnappyError: [FAILED_TO_LOAD_NATIVE_LIBRARY] null
+                .config("spark.sql.parquet.compression.codec", "gzip")
                 .getOrCreate();
 
         spark.sql("USE default");
