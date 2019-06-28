@@ -1,5 +1,3 @@
-package com.wugui.sparkstarter;
-
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.Dataset;
@@ -26,12 +24,12 @@ public class SparkHiveOldVersion {
         hiveContext.sql("DROP TABLE IF EXISTS student_infos");
 //在hive中创建student_infos表
         hiveContext.sql("CREATE TABLE IF NOT EXISTS student_infos (name STRING,age INT) row format delimited fields terminated by ',' ");
-        hiveContext.sql("load data local inpath '/Users/huzekang/study/spark-starter/src/main/resources/student_infos.txt' into table student_infos");
+        hiveContext.sql("load data local inpath '/Users/huzekang/study/bigdata-starter/spark-starter/src/main/resources/student_infos.txt' into table student_infos");
 
         hiveContext.sql("DROP TABLE IF EXISTS student_scores");
         hiveContext.sql("CREATE TABLE IF NOT EXISTS student_scores (name STRING, score INT) row format delimited fields terminated by ','");
         hiveContext.sql("LOAD DATA "
-                + "LOCAL INPATH '/Users/huzekang/study/spark-starter/src/main/resources/student_scores.txt'"
+                + "LOCAL INPATH '/Users/huzekang/study/bigdata-starter/spark-starter/src/main/resources/student_scores.txt'"
                 + "INTO TABLE student_scores");
 
         hiveContext.sql("select * from student_infos").show();

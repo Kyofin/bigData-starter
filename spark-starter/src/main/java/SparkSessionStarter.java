@@ -1,6 +1,3 @@
-package com.wugui.sparkstarter;
-
-
 import lombok.Data;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
@@ -47,7 +44,7 @@ public class SparkSessionStarter {
      * 快速测试例子
      */
     public static void quickStart(SparkSession spark) {
-        Dataset<Row> df = spark.read().text("/Users/huzekang/study/spark-starter/src/main/resources/students.txt");
+        Dataset<Row> df = spark.read().text("/Users/huzekang/study/bigdata-starter/spark-starter/src/main/resources/students.txt");
         df.show();
     }
 
@@ -61,7 +58,7 @@ public class SparkSessionStarter {
     public static void reflectionCode(SparkSession spark) {
         // Create an RDD of Person objects from a text file
         JavaRDD<Person> peopleRDD = spark.read()
-                .textFile("/Users/huzekang/study/spark-starter/src/main/resources/people.txt")
+                .textFile("/Users/huzekang/study/bigdata-starter/spark-starter/src/main/resources/people.txt")
                 .javaRDD()
                 .map(line -> {
                     String[] parts = line.split(",");
@@ -121,7 +118,7 @@ public class SparkSessionStarter {
     public static void customCode(SparkSession spark) {
         // Create an RDD
         JavaRDD<String> peopleRDD = spark.sparkContext()
-                .textFile("/Users/huzekang/study/spark-starter/src/main/resources/people.txt", 1)
+                .textFile("/Users/huzekang/study/bigdata-starter/spark-starter/src/main/resources/people.txt", 1)
                 .toJavaRDD();
 
         // The schema is encoded in a string

@@ -1,4 +1,4 @@
-package com.wugui.sparkstarter.demo1;
+package demo1;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

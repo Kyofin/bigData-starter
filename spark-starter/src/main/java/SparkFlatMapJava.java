@@ -1,11 +1,8 @@
-package com.wugui.sparkstarter;
-
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -29,7 +26,7 @@ public class SparkFlatMapJava {
 
     public static void flatMapJava(JavaSparkContext sc){
         //设置数据路径
-        JavaRDD<String> textData = sc.textFile("/Users/huzekang/study/spark-starter/src/main/resources/students.txt");
+        JavaRDD<String> textData = sc.textFile("/Users/huzekang/study/bigdata-starter/spark-starter/src/main/resources/students.txt");
 
         //输出处理前总行数
         System.out.println("before:"+textData.count()+"行");
@@ -62,7 +59,7 @@ public class SparkFlatMapJava {
         String outPutPath = "./flatMapJava8";
 
 
-        sc.textFile("/Users/huzekang/study/spark-starter/src/main/resources/students.txt")
+        sc.textFile("/Users/huzekang/study/bigdata-starter/spark-starter/src/main/resources/students.txt")
           .flatMap(line -> Arrays.asList(line.split(" ")).iterator())
           .saveAsTextFile(outPutPath);
     }

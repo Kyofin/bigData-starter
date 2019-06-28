@@ -1,4 +1,4 @@
-package com.wugui.sparkstarter.demo1;
+package demo1;
 
 import lombok.Data;
 import scala.math.Ordered;

@@ -1,6 +1,4 @@
-package com.wugui.sparkstarter.demo1;
-
-import org.apache.spark.sql.catalyst.expressions.Rand;
+package demo1;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

@@ -1,4 +1,4 @@
-package com.wugui.sparkstarter.demo1;
+package demo1;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class AppLogSparkApplication {
-    static  DBHelper db1 = null;
+    static DBHelper db1 = null;
     public static void main(String[] args) throws SQLException {
         //1.创建spark配置文件和上下文对象
         SparkConf conf = new SparkConf().setAppName("sparkTest").setMaster("local");
@@ -56,7 +56,7 @@ public class AppLogSparkApplication {
 
     }
     //将日志的RDD映射为key-value的格式
-    private static JavaPairRDD<String,AccessLogInfo>  mapAccessLogRDD2Pair(JavaRDD<String> javaRDD){
+    private static JavaPairRDD<String, AccessLogInfo>  mapAccessLogRDD2Pair(JavaRDD<String> javaRDD){
         //PairFunction中第一个string表示的是传入的参数，后面两个代表返回值javaRDD
         return javaRDD.mapToPair(new PairFunction<String, String, AccessLogInfo>() {
 
@@ -81,7 +81,7 @@ public class AppLogSparkApplication {
     /**
      * 根据deviceID进行聚合求出上行和下行的流量，及其最早访问的时间
      */
-    private static JavaPairRDD<String,AccessLogInfo> aggregateByDeviceId( JavaPairRDD<String, AccessLogInfo> accessLogPairRdd){
+    private static JavaPairRDD<String, AccessLogInfo> aggregateByDeviceId(JavaPairRDD<String, AccessLogInfo> accessLogPairRdd){
         //Function2的前两个accessLogInfo对应call的前两个，第三个是返回的
         return accessLogPairRdd.reduceByKey(new Function2<AccessLogInfo, AccessLogInfo, AccessLogInfo>() {
             private static  final  long  serivaVersionUID = 1L;
@@ -102,7 +102,7 @@ public class AppLogSparkApplication {
      */
     private  static  JavaPairRDD<AccessLogSortKey,String> mapRDDkey2SortKey(JavaPairRDD<String, AccessLogInfo> aggregateLogPairRDD){
         //后两个为返回的参数
-      return  aggregateLogPairRDD.mapToPair(new PairFunction<Tuple2<String,AccessLogInfo>, AccessLogSortKey,String>() {
+      return  aggregateLogPairRDD.mapToPair(new PairFunction<Tuple2<String, AccessLogInfo>, AccessLogSortKey,String>() {
           private static  final  long  serivaVersionUID = 1L;
             @Override
             //tuple的key是deviceID，value是AccessLogInfo

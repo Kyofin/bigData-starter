@@ -1,5 +1,3 @@
-package com.wugui.sparkstarter;
-
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -21,7 +19,7 @@ public class SparkMapJava {
     }
 
     public static void mapJava(JavaSparkContext sc){
-        JavaRDD<String> txtData = sc.textFile("/Users/huzekang/study/spark-starter/src/main/resources/students.txt");
+        JavaRDD<String> txtData = sc.textFile("/Users/huzekang/study/bigdata-starter/spark-starter/src/main/resources/students.txt");
 
         //保留最后一个值
         JavaRDD<String> mapData1 = txtData.map(new Function<String, String>() {
@@ -61,7 +59,7 @@ public class SparkMapJava {
 
 
     public static void mapJava8(JavaSparkContext sc){
-        String path = "/Users/huzekang/study/spark-starter/src/main/resources/students.txt";
+        String path = "/Users/huzekang/study/bigdata-starter/spark-starter/src/main/resources/students.txt";
         JavaRDD<String> mapData1 = sc.textFile(path).map(line -> line.split(" ")[0]);
         System.out.println("count: "+mapData1.count());
         System.out.println("first word:"+mapData1.first());

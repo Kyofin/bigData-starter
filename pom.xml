@@ -5,8 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.wugui</groupId>
-    <artifactId>spark-starter</artifactId>
+    <artifactId>bigdata-starter</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>hive-starter</module>
+        <module>hbase-starter</module>
+        <module>spark-starter</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

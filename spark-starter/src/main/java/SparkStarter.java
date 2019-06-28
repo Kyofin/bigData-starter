@@ -1,5 +1,3 @@
-package com.wugui.sparkstarter;
-
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -24,7 +22,7 @@ public class SparkStarter {
         stringJavaRDD.foreach(o -> System.out.println(o));
 
         // Should be some file on your system
-        String logFile = "file:///Users/huzekang/study/spark-starter/src/main/resources/kv1.txt";
+        String logFile = "file:///Users/huzekang/study/bigdata-starter/spark-starter/src/main/resources/kv1.txt";
 
         JavaRDD<String> logData = sc.textFile(logFile).cache();
         long numAs = logData.filter(s -> s.contains("a")).count();
