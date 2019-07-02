@@ -14,7 +14,8 @@ import phoenix_mybatis.mybatis.PhoenixDataSourceConfig;
 import java.util.List;
 
 /**
- *  on 18-3-11.
+ *  需要手动在Phoenix中创建USER_INFO表
+ *  create table USER_INFO (id integer not null primary key, name varchar);
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @Import(PhoenixDataSourceConfig.class)
