@@ -9,6 +9,7 @@ import org.apache.spark.sql.types.StructType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  *
@@ -32,11 +33,13 @@ public class SparkSessionStarter {
                 .config("spark.some.config.option", "some-value")
                 .getOrCreate();
 
-        quickStart(spark);
+//        quickStart(spark);
+//
+//        customCode(spark);
+//
+//        reflectionCode(spark);
 
-        customCode(spark);
-
-        reflectionCode(spark);
+        runJdbcDatasetExample(spark);
 
     }
 
@@ -46,6 +49,43 @@ public class SparkSessionStarter {
     public static void quickStart(SparkSession spark) {
         Dataset<Row> df = spark.read().text("/Users/huzekang/study/bigdata-starter/spark-starter/src/main/resources/students.txt");
         df.show();
+    }
+
+
+    /**
+     * 使用SparkSql读pg并写入pg
+     */
+    private static void runJdbcDatasetExample(SparkSession spark) {
+        // $example on:jdbc_dataset$
+        // Note: JDBC loading and saving can be achieved via either the load/save or jdbc methods
+        // Loading data from a JDBC source
+        Dataset<Row> jdbcDF = spark.read()
+                .format("jdbc")
+                .option("url", "jdbc:postgresql://192.168.1.150:5432/postgres")
+                .option("dbtable", "public.person")
+                .option("user", "postgres")
+                .option("password", "123456")
+                .load();
+
+        Properties connectionProperties = new Properties();
+        connectionProperties.put("user", "postgres");
+        connectionProperties.put("password", "123456");
+        Dataset<Row> jdbcDF2 = spark.read()
+                .jdbc("jdbc:postgresql://192.168.1.150:5432/postgres", "public.person", connectionProperties);
+
+        // Saving data to a JDBC source
+        jdbcDF.write()
+                .format("jdbc")
+                .option("url", "jdbc:postgresql://192.168.1.150:5432/postgres")
+                .option("dbtable", "public.person_jdbcDF")
+                .option("user", "postgres")
+                .option("password", "123456")
+                .save();
+
+        jdbcDF2.write()
+                .jdbc("jdbc:postgresql://192.168.1.150:5432/postgres", "public.person_jdbcDF2", connectionProperties);
+
+
     }
 
 
