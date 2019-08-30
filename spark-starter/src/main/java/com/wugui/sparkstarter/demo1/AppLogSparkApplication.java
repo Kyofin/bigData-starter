@@ -1,4 +1,4 @@
-package demo1;
+package com.wugui.sparkstarter.demo1;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;

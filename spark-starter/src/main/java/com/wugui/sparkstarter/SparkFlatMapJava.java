@@ -1,3 +1,5 @@
+package com.wugui.sparkstarter;
+
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -9,7 +11,7 @@ import java.util.Iterator;
 public class SparkFlatMapJava {
 
     public static void main(String[] args){
-        SparkConf conf = new SparkConf().setMaster("local").setAppName("SparkFlatMapJava");
+        SparkConf conf = new SparkConf().setMaster("local").setAppName("com.wugui.SparkFlatMapJava");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
 

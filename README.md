@@ -122,7 +122,7 @@ sales.groupBy("year").pivot("city",Seq("Warsaw","Boston","Toronto")).agg(sum("am
 2. 直接在idea上运行相应的main方法。并在spark上下文设置master为local即可。
 
 ```
-  SparkConf conf = new SparkConf().setMaster("local").setAppName("SparkFlatMapJava");
+  SparkConf conf = new SparkConf().setMaster("local").setAppName("com.wugui.SparkFlatMapJava");
 ```
 
 
@@ -130,9 +130,7 @@ sales.groupBy("year").pivot("city",Seq("Warsaw","Boston","Toronto")).agg(sum("am
 ### 提交作业到本机的spark环境
 
 1.启动spark
-```
-~/opt/spark-2.4.0-bin-hadoop2.7 » bin/spark-submit --class "com.wugui.sparkstarter.SparkHiveNewVersion" /Users/huzekang/study/spark-starter/target/spark-starter-1.0-SNAPSHOT.jar
-```
+![](https://raw.githubusercontent.com/huzekang/picbed/master/20190830154203.png)
 可以观察到起来了一个master和worker进程。
 ![](https://raw.githubusercontent.com/huzekang/picbed/master/20190626112610.png)
 
@@ -145,7 +143,7 @@ SparkSession spark = SparkSession
 
 3.使用`mvn clean package`打包好的作业，并提交到本地安装好的spark环境上跑
 ```
-~/opt/spark-2.4.0-bin-hadoop2.7 » bin/spark-submit --class "com.wugui.sparkstarter.SparkHiveNewVersion" /Users/huzekang/study/spark-starter/target/spark-starter-1.0-SNAPSHOT.jar
+~/opt/spark-2.4.0-bin-hadoop2.7 » bin/spark-submit --class "com.wugui.sparkstarter.com.wugui.SparkHiveNewVersion" /Users/huzekang/study/spark-starter/target/spark-starter-1.0-SNAPSHOT.jar
 
 ```
 4.打开spark server界面，可以看到已经完成的spark作业。
@@ -169,7 +167,7 @@ export  HADOOP_CONF_DIR=/Users/huzekang/opt/hadoop-cdh/hadoop-2.6.0-cdh5.14.2/et
 
 3.使用`mvn clean package`打包好的作业，并提交到本地安装好的yarn环境上跑。
 ```
-~/opt/spark-2.4.0-bin-hadoop2.7 » bin/spark-submit  --master yarn  --deploy-mode cluster  --class "com.wugui.sparkstarter.SparkHiveNewVersion" /Users/huzekang/study/spark-starter/target/spark-starter-1.0-SNAPSHOT.jar
+~/opt/spark-2.4.0-bin-hadoop2.7 » bin/spark-submit  --master yarn  --deploy-mode cluster  --class "com.wugui.sparkstarter.com.wugui.SparkHiveNewVersion" /Users/huzekang/study/spark-starter/target/spark-starter-1.0-SNAPSHOT.jar
 ```
 4.打开yarn观察到作业已经完成了。
 ![](https://raw.githubusercontent.com/huzekang/picbed/master/20190626133707.png)

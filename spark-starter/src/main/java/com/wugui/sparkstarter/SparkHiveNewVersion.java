@@ -1,3 +1,5 @@
+package com.wugui.sparkstarter;
+
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;

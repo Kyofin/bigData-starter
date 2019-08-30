@@ -1,3 +1,5 @@
+package com.wugui.sparkstarter;
+
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -14,7 +16,7 @@ public class SparkStarter {
     public static void main(String[] args) {
         SparkConf sparkConf = new SparkConf()
                 .setMaster("local[5]")
-                .setAppName("SparkStarter");
+                .setAppName("com.wugui.SparkStarter");
         //之后你用的是Rdd
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
         // Should be some file on remote hdfs

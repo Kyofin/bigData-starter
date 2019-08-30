@@ -1,3 +1,5 @@
+package com.wugui.sparkstarter;
+
 import lombok.Data;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
