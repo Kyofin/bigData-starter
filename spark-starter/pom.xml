@@ -105,6 +105,10 @@
                     <artifactId>hadoop-common</artifactId>
                     <groupId>org.apache.hadoop</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>disruptor</artifactId>
+                    <groupId>com.lmax</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -125,6 +129,11 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>org.apache.phoenix</groupId>
+            <artifactId>phoenix-core</artifactId>
+            <version>4.14.0-HBase-1.2</version>
+        </dependency>
         <!--<dependency>-->
         <!--<groupId>org.apache.hadoop</groupId>-->
         <!--<artifactId>hadoop-client</artifactId>-->
