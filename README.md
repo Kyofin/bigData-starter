@@ -4,8 +4,11 @@
 Spark中的RDD就是一个不可变的分布式对象集合。每个RDD都被分为多个分区，这些分区运行在集群中的不同节点上。RDD可以包含Python，Java，Scala中任意类型的对象，甚至可以包含用户自定义的对象。
 用户可以使用两种方法创建RDD：读取一个外部数据集，或在驱动器程序中分发驱动器程序中的对象集合，比如list或者set。
 RDD的转化操作都是惰性求值的，这意味着我们对RDD调用转化操作，操作不会立即执行。相反，Spark会在内部记录下所要求执行的操作的相关信息。我们不应该把RDD看做存放着特定数据的数据集，而最好把每个RDD当做我们通过转化操作构建出来的、记录如何计算数据的指令列表。数据读取到RDD中的操作也是惰性的，数据只会在必要时读取。转化操作和读取操作都有可能多次执行。
+![](https://raw.githubusercontent.com/huzekang/picbed/master/20190831152712.png)
 ### Dataframe/Dataset API简介
 Dataframe/Dataset也是分布式数据集，但与RDD不同的是其带有schema信息，类似一张表。
+![](https://raw.githubusercontent.com/huzekang/picbed/master/20190831152816.png)
+![](https://raw.githubusercontent.com/huzekang/picbed/master/20190831152923.png)
 可以用下面一张图详细对比Dataset/dataframe和rdd的区别：
 ![](https://pic3.zhimg.com/80/v2-2224e315ac70f1ad22c238c9b5798ade_hd.jpg)
 
