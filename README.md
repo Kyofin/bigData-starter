@@ -6,7 +6,7 @@ Spark中的RDD就是一个不可变的分布式对象集合。每个RDD都被分
 RDD的转化操作都是惰性求值的，这意味着我们对RDD调用转化操作，操作不会立即执行。相反，Spark会在内部记录下所要求执行的操作的相关信息。我们不应该把RDD看做存放着特定数据的数据集，而最好把每个RDD当做我们通过转化操作构建出来的、记录如何计算数据的指令列表。数据读取到RDD中的操作也是惰性的，数据只会在必要时读取。转化操作和读取操作都有可能多次执行。
 ![](https://raw.githubusercontent.com/huzekang/picbed/master/20190831152712.png)
 ### Dataframe/Dataset API简介
-Dataframe/Dataset也是分布式数据集，但与RDD不同的是其带有schema信息，类似一张表。
+从 Spark 2.0 开始，Dataset 开始具有两种不同类型的 API 特征：有明确类型的 API 和无类型的 API。从概念上来说，**你可以把 DataFrame 当作一些通用对象 Dataset[Row] 的集合的一个别名**，而一行就是一个通用的无类型的 JVM 对象。与之形成对比，Dataset 就是一些有明确类型定义的 JVM 对象的集合，通过你在 Scala 中定义的 Case Class 或者 Java 中的 Class 来指定。
 ![](https://raw.githubusercontent.com/huzekang/picbed/master/20190831152816.png)
 ![](https://raw.githubusercontent.com/huzekang/picbed/master/20190831152923.png)
 可以用下面一张图详细对比Dataset/dataframe和rdd的区别：
