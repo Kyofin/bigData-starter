@@ -127,12 +127,24 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.apache.phoenix</groupId>
+            <artifactId>phoenix-spark</artifactId>
+            <version>4.14.0-HBase-1.2</version>
+            <scope>provided</scope>
+        </dependency>
 
 
         <dependency>
             <groupId>org.apache.phoenix</groupId>
             <artifactId>phoenix-core</artifactId>
             <version>4.14.0-HBase-1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.phoenix</groupId>
+            <artifactId>phoenix-client</artifactId>
+            <version>4.14.1-HBase-1.2</version>
         </dependency>
         <!--<dependency>-->
         <!--<groupId>org.apache.hadoop</groupId>-->
