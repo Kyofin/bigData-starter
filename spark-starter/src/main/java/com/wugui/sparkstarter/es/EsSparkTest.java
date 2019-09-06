@@ -17,16 +17,6 @@ import java.util.Map;
 public class EsSparkTest {
 
     public static void main(String[] args) {
-//        new EsSparkTest().writeEs();
-//        new EsSparkTest().readEs();
-        new EsSparkTest().writeBeanEs();
-    }
-
-    /**
-     * 以map方式存入es
-     */
-    public void writeEs() {
-        String elasticIndex = "spark/docs";
         SparkConf sparkConf = new SparkConf()
                 .setAppName("writeEs")
                 .setMaster("local[*]")
@@ -36,6 +26,21 @@ public class EsSparkTest {
                 .set("es.nodes.wan.only", "true");
 
         SparkSession sparkSession = SparkSession.builder().config(sparkConf).getOrCreate();
+
+//        new EsSparkTest().writeEs(sparkSession);
+//        new EsSparkTest().writeBeanEs(sparkSession);
+//        new EsSparkTest().writeJsonEs(sparkSession);
+
+//        new EsSparkTest().readEs(sparkSession);
+        new EsSparkTest().readEs2(sparkSession);
+    }
+
+    /**
+     * 以map方式存入es
+     */
+    public void writeEs(SparkSession sparkSession) {
+        String elasticIndex = "spark/docs";
+
         JavaSparkContext jsc = new JavaSparkContext(sparkSession.sparkContext());//adapter
         Map<String, ?> numbers = ImmutableMap.of("one", 1, "two", 2);
         Map<String, ?> airports = ImmutableMap.of("city", "广州", "airportName", "广州白云机场");
@@ -46,15 +51,8 @@ public class EsSparkTest {
     /**
      * 以对象存入es
      */
-    public void writeBeanEs() {
-        SparkConf sparkConf = new SparkConf()
-                .setAppName("writeEs")
-                .setMaster("local[*]")
-                .set("es.index.auto.create", "true")
-                .set("es.nodes", "192.168.1.25")
-                .set("es.port", "9200")
-                .set("es.nodes.wan.only", "true");
-        SparkSession sparkSession = SparkSession.builder().config(sparkConf).getOrCreate();
+    public void writeBeanEs(SparkSession sparkSession) {
+
         JavaSparkContext jsc = new JavaSparkContext(sparkSession.sparkContext());//adapter
 
 
@@ -66,16 +64,47 @@ public class EsSparkTest {
         JavaEsSpark.saveToEs(javaRDD, "spark/docs");
     }
 
-    public void readEs() {
-        SparkConf sparkConf = new SparkConf()
-                .setAppName("writeEs")
-                .setMaster("local[*]")
-                .set("es.index.auto.create", "true")
-                .set("es.nodes", "192.168.1.25")
-                .set("es.port", "9200")
-                .set("es.nodes.wan.only", "true");
+    /**
+     * 以json方式存入es
+     * @param sparkSession
+     */
+    public void writeJsonEs(SparkSession sparkSession) {
+        String json1 = "{\"reason\" : \"business\",\"airport\" : \"SFO\"}";
+        String json2 = "{\"participants\" : 5,\"airport\" : \"OTP\"}";
+        String json3 = "{" +
+                "    \"flavor\": {" +
+                "        \"name\": \"IMS_CMREPO\"," +
+                "        \"links\": [" +
+                "            {" +
+                "                \"href\": \"http://192.168.49.25:8774/v2/29ec86a6f17942f49fdc0bcc0748087b/flavors/00061ec1-4405-40fe-87a5-d06191f6826d\"," +
+                "                \"rel\": \"self\"" +
+                "            }," +
+                "            {" +
+                "                \"href\": \"http://192.168.49.25:8774/29ec86a6f17942f49fdc0bcc0748087b/flavors/00061ec1-4405-40fe-87a5-d06191f6826d\"," +
+                "                \"rel\": \"bookmark\"" +
+                "            }" +
+                "        ]," +
+                "        \"ram\": 16384," +
+                "        \"OS-FLV-DISABLED:disabled\": false," +
+                "        \"vcpus\": 8," +
+                "        \"swap\": \"\"," +
+                "        \"os-flavor-access:is_public\": true," +
+                "        \"rxtx_factor\": 1," +
+                "        \"OS-FLV-EXT-DATA:ephemeral\": 0," +
+                "        \"disk\": 38," +
+                "        \"id\": \"00061ec1-4405-40fe-87a5-d06191f6826d\"" +
+                "    }" +
+                '}';
 
-        SparkSession sparkSession = SparkSession.builder().config(sparkConf).getOrCreate();
+        JavaSparkContext jsc = new JavaSparkContext(sparkSession.sparkContext());
+        JavaRDD<String> stringRDD = jsc.parallelize(ImmutableList.of(json1, json2,json3));
+        JavaEsSpark.saveJsonToEs(stringRDD, "spark/json-trips");
+    }
+
+
+
+    public void readEs(SparkSession sparkSession) {
+
         JavaSparkContext jsc = new JavaSparkContext(sparkSession.sparkContext());//adapter
         JavaRDD<Map<String, Object>> searchRdd = JavaEsSpark.esRDD(jsc, "spark/docs", "?q=广州").values();
         for (Map<String, Object> item : searchRdd.collect()) {
@@ -84,6 +113,10 @@ public class EsSparkTest {
         sparkSession.stop();
     }
 
+
+    public void readEs2(SparkSession sparkSession) {
+        sparkSession.sqlContext().read().format("es").load("spark/docs").show();
+    }
 
 
 }
