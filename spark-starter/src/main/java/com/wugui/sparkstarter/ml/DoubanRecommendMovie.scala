@@ -33,9 +33,12 @@ object DoubanRecommendMovie {
     //准备数据
     preparation(rawUserMoviesData, rawHotMoviesData)
     println("准备完数据")
-    model(sc, rawUserMoviesData, rawHotMoviesData)
 
-    evaluate(sc,rawUserMoviesData, rawHotMoviesData)
+//    model(sc, rawUserMoviesData, rawHotMoviesData)
+
+//    evaluate(sc,rawUserMoviesData, rawHotMoviesData)
+
+    recommend(sc, rawUserMoviesData, rawHotMoviesData, base)
   }
 
   /**
@@ -116,11 +119,20 @@ object DoubanRecommendMovie {
     println("输出第一个userFeature")
     println(model.userFeatures.mapValues(_.mkString(", ")).first())
     for (userID <- Array(100, 1001, 10001, 100001, 110000)) {
-      checkRecommenderResult(userID, rawUserMoviesData, bMoviesAndName, reverseUserIDMapping, model)
+      checkRecommendResult(userID, rawUserMoviesData, bMoviesAndName, reverseUserIDMapping, model)
     }
     //    unpersist(model)
   }
 
+  /**
+    * 评价模型
+    * 我们可以通过计算均方差（Mean Squared Error, MSE）来衡量模型的好坏。
+    * 数理统计中均方误差是指参数估计值与参数真值之差平方的期望值，记为MSE。
+    * MSE是衡量“平均误差”的一种较方便的方法，MSE可以评价数据的变化程度，MSE的值越小，说明预测模型描述实验数据具有更好的精确度。
+    *
+    * 我们可以调整rank，numIterations，lambda，alpha这些参数，不断优化结果，使均方差变小。
+    * 比如：iterations越多，lambda较小，均方差会较小，推荐结果较优。
+    */
   def evaluate( sc: SparkContext,
                 rawUserMoviesData: RDD[String],
                 rawHotMoviesData: RDD[String]): Unit = {
@@ -141,9 +153,8 @@ object DoubanRecommendMovie {
     }.cache()
 
     val numIterations = 10
-
-    for (rank   <- Array(10,  50);
-         lambda <- Array(1.0, 0.01,0.0001)) {
+    // 评估显性反馈的参数的结果
+    for (rank   <- Array(10,  50); lambda <- Array(1.0, 0.01,0.0001)) {
       val model = ALS.train(ratings, rank, numIterations, lambda)
 
       // Evaluate the model on rating data
@@ -165,9 +176,8 @@ object DoubanRecommendMovie {
       println(s"(rank:$rank, lambda: $lambda, Explicit ) Mean Squared Error = " + MSE)
     }
 
-    for (rank   <- Array(10,  50);
-         lambda <- Array(1.0, 0.01,0.0001);
-         alpha  <- Array(1.0, 40.0)) {
+    //评估隐性反馈的参数的结果。
+    for (rank   <- Array(10,  50); lambda <- Array(1.0, 0.01,0.0001); alpha  <- Array(1.0, 40.0)) {
       val model = ALS.trainImplicit(ratings, rank, numIterations, lambda, alpha)
 
       // Evaluate the model on rating data
@@ -190,12 +200,14 @@ object DoubanRecommendMovie {
     }
   }
 
-  //查看给某个用户的推荐
-  def checkRecommenderResult(userID: Int,
-                             rawUserMoviesData: RDD[String],
-                             bMoviesAndName: Broadcast[scala.collection.Map[Int, String]],
-                             reverseUserIDMapping: RDD[(Long, String)],
-                             model: MatrixFactorizationModel): Unit = {
+  /**
+    * 挑选几个用户，查看这些用户看过的电影，以及这个模型推荐给他们的电影
+    */
+  def checkRecommendResult(userID: Int,
+                           rawUserMoviesData: RDD[String],
+                           bMoviesAndName: Broadcast[scala.collection.Map[Int, String]],
+                           reverseUserIDMapping: RDD[(Long, String)],
+                           model: MatrixFactorizationModel): Unit = {
 
     val userName = reverseUserIDMapping.lookup(userID).head
 
@@ -220,4 +232,62 @@ object DoubanRecommendMovie {
   }
 
 
+  def recommend(sc: SparkContext,
+                rawUserMoviesData: RDD[String],
+                rawHotMoviesData: RDD[String],
+                base: String): Unit = {
+    val moviesAndName = buildMovies(rawHotMoviesData)
+    val bMoviesAndName = sc.broadcast(moviesAndName)
+
+    val data = buildUserMovieRatings(rawUserMoviesData)
+
+    val userIdToInt: RDD[(String, Long)] =
+      data.map(_.userID).distinct().zipWithUniqueId()
+    val reverseUserIDMapping: RDD[(Long, String)] =
+      userIdToInt map { case (l, r) => (r, l) }
+
+    val userIDMap: scala.collection.Map[String, Int] =
+      userIdToInt.collectAsMap().map { case (n, l) => (n, l.toInt) }
+
+    val bUserIDMap = sc.broadcast(userIDMap)
+    val bReverseUserIDMap = sc.broadcast(reverseUserIDMapping.collectAsMap())
+
+    val ratings: RDD[Rating] = data.map { r =>
+      Rating(bUserIDMap.value(r.userID), r.movieID, r.rating)
+    }.cache()
+    //使用协同过滤算法建模
+    //val model = ALS.trainImplicit(ratings, 10, 10, 0.01, 1.0)
+    val model = ALS.train(ratings, 50, 10, 0.0001)
+    ratings.unpersist()
+
+    model.save(sc, base + "model")
+    //val sameModel = MatrixFactorizationModel.load(sc, base + "model")
+
+    val allRecommendations = model.recommendProductsForUsers(5) map {
+      case (userID, recommendations) => {
+        var recommendationStr = ""
+        for (r <- recommendations) {
+          recommendationStr += r.product + ":" + bMoviesAndName.value.getOrElse(r.product, "") + ","
+        }
+        if (recommendationStr.endsWith(","))
+          recommendationStr = recommendationStr.substring(0, recommendationStr.length - 1)
+
+        (bReverseUserIDMap.value(userID), recommendationStr)
+      }
+    }
+
+    // 将推荐结果写入到文件中。
+    // 第一个字段是用户名，后面是五个推荐的电影(电影ID:电影名字)
+    //allRecommendations.saveAsTextFile(base + "result.csv")
+    allRecommendations.coalesce(1).sortByKey().saveAsTextFile(base + "result.csv")
+
+    unpersist(model)
+  }
+
+  def unpersist(model: MatrixFactorizationModel): Unit = {
+    // At the moment, it's necessary to manually unpersist the RDDs inside the model
+    // when done with it in order to make sure they are promptly uncached
+    model.userFeatures.unpersist()
+    model.productFeatures.unpersist()
+  }
 }
