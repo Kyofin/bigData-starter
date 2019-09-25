@@ -12,6 +12,9 @@ import org.elasticsearch.spark.sql.api.java.JavaEsSparkSQL;
  * @create: 2019-09-09 15:31
  **/
 public class RedCrossEsSpark {
+
+    public static final String JDBC_URL_PHOENIX = "jdbc:phoenix:cdh01:2181";
+
     public static void main(String[] args) throws AnalysisException {
         SparkSession sparkSession = SparkSession
                 .builder()
@@ -69,7 +72,7 @@ public class RedCrossEsSpark {
 
         // 写入es
         sparkSession.sparkContext().conf().set("es.index.auto.create", "true")
-                .set("es.nodes", "192.168.1.25")
+                .set("es.nodes", "172.19.4.171")
                 .set("es.port", "9200")
                 .set("es.nodes.wan.only", "true");
 
@@ -84,7 +87,7 @@ public class RedCrossEsSpark {
                 .format("jdbc")
                 .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
                 .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
+                .option("url", JDBC_URL_PHOENIX)
                 .option("dbtable", "\"gzhonghui\".\"sanitation_negligence_record\"")
                 .load();
         sanitationNegligenceRecord.createOrReplaceTempView("sanitation_negligence_record");

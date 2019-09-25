@@ -334,6 +334,14 @@ scala> nestedNumbers.map((x: List[Int]) => x.map(_ * 2)).flatten
 res1: List[Int] = List(2, 4, 6, 8)
 ```
 
+## 常用操作
+###对列的数据进行操作
+强转类型
+```java
+ // Casts colA to integer.
+   df.select(df("colA").cast("int"))
+```
+
 这个例子先调用map，然后调用flatten，这就是“组合子”的特征，也是这些函数的本质。
 
 **参考** Effective Scala 对[flatMap](https://twitter.github.com/effectivescala/#Functional programming-`flatMap`)的意见。
