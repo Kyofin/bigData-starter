@@ -22,7 +22,7 @@ public class RedCrossEsSpark {
                 .master("local")
                 .getOrCreate();
 
-        readOutPatientRecordFromHbase(sparkSession);
+//        readOutPatientRecordFromHbase(sparkSession);
 
         readInPatientRecordFromHbase(sparkSession);
 
@@ -96,7 +96,7 @@ public class RedCrossEsSpark {
                 .format("jdbc")
                 .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
                 .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
+                .option("url", JDBC_URL_PHOENIX)
                 .option("dbtable", "\"gzhonghui\".\"hospitalized_case_index\"")
                 .load();
         hospitalizedCaseIndex.createOrReplaceTempView("hospitalized_case_index");
@@ -106,7 +106,7 @@ public class RedCrossEsSpark {
                 .format("jdbc")
                 .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
                 .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
+                .option("url", JDBC_URL_PHOENIX)
                 .option("dbtable", "\"gzhonghui\".\"patient_basic_information\"")
                 .load();
         patientBasicInformation.createOrReplaceTempView("patient_basic_information");
@@ -116,7 +116,7 @@ public class RedCrossEsSpark {
                 .format("jdbc")
                 .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
                 .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
+                .option("url", JDBC_URL_PHOENIX)
                 .option("dbtable", "\"gzhonghui\".\"inspection_record\"")
                 .load();
         inspectionRecord.createOrReplaceTempView("inspection_record");
@@ -126,7 +126,7 @@ public class RedCrossEsSpark {
                 .format("jdbc")
                 .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
                 .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
+                .option("url", JDBC_URL_PHOENIX)
                 .option("dbtable", "\"gzhonghui\".\"assay_record\"")
                 .load();
         assayRecord.createOrReplaceTempView("assay_record");
@@ -136,39 +136,18 @@ public class RedCrossEsSpark {
                 .format("jdbc")
                 .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
                 .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
+                .option("url", JDBC_URL_PHOENIX)
                 .option("dbtable", "\"gzhonghui\".\"consultation_note\"")
                 .load();
         consultationNote.createOrReplaceTempView("consultation_note");
-    }
 
-    private static void readOutPatientRecordFromHbase(SparkSession sparkSession) throws AnalysisException {
-        // 使用phoenix jdbc连接驱动读取数据
-        Dataset<Row> sanitationNegligenceRecord = sparkSession.read()
-                .format("jdbc")
-                .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
-                .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
-                .option("dbtable", "\"gzhonghui\".\"sanitation_negligence_record\"")
-                .load();
-        sanitationNegligenceRecord.createOrReplaceTempView("sanitation_negligence_record");
-
-
-        Dataset<Row> patientBasicInformation = sparkSession.read()
-                .format("jdbc")
-                .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
-                .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
-                .option("dbtable", "\"gzhonghui\".\"patient_basic_information\"")
-                .load();
-        patientBasicInformation.createOrReplaceTempView("patient_basic_information");
 
 
         Dataset<Row> outpatientRecord = sparkSession.read()
                 .format("jdbc")
                 .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
                 .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
+                .option("url", JDBC_URL_PHOENIX)
                 .option("dbtable", "\"gzhonghui\".\"outpatient_record\"")
                 .load();
         outpatientRecord.createOrReplaceTempView("outpatient_record");
@@ -178,39 +157,29 @@ public class RedCrossEsSpark {
                 .format("jdbc")
                 .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
                 .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
+                .option("url", JDBC_URL_PHOENIX)
                 .option("dbtable", "\"gzhonghui\".\"emergency_observation_record\"")
                 .load();
         emergencyObservationRecord.createOrReplaceTempView("emergency_observation_record");
 
-
-        Dataset<Row> inspectionRecord = sparkSession.read()
-                .format("jdbc")
-                .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
-                .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
-                .option("dbtable", "\"gzhonghui\".\"inspection_record\"")
-                .load();
-        inspectionRecord.createOrReplaceTempView("inspection_record");
-
-
-        Dataset<Row> assayRecord = sparkSession.read()
-                .format("jdbc")
-                .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
-                .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
-                .option("dbtable", "\"gzhonghui\".\"assay_record\"")
-                .load();
-        assayRecord.createOrReplaceTempView("assay_record");
 
 
         Dataset<Row> westernMedicinePrescription = sparkSession.read()
                 .format("jdbc")
                 .option("driver", "org.apache.phoenix.jdbc.PhoenixDriver")
                 .option("phoenix.schema.isNamespaceMappingEnabled", "true")
-                .option("url", "jdbc:phoenix:cdh01:2181")
+                .option("url", JDBC_URL_PHOENIX)
                 .option("dbtable", "\"gzhonghui\".\"western_medicine_prescription\"")
                 .load();
         westernMedicinePrescription.createOrReplaceTempView("western_medicine_prescription");
+    }
+
+    private static void readOutPatientRecordFromHbase(SparkSession sparkSession) throws AnalysisException {
+        // 使用phoenix jdbc连接驱动读取数据
+
+
+
+
+
     }
 }
